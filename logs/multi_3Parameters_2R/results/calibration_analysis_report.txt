@@ -1,0 +1,132 @@
+SWMM CALIBRATION WORKFLOW ANALYSIS REPORT
+===========================================
+
+Date: Generated during calibration workflow
+Project: SWMM Model Calibration using ES-ILU
+Location: /data/results/
+
+EXECUTIVE SUMMARY
+-----------------
+A comprehensive SWMM calibration workflow was successfully executed, resulting in a calibrated model with excellent performance on both calibration (NSE=0.935) and validation (NSE=0.817) events. The workflow employed Morris sensitivity analysis to identify the most influential parameters, followed by Ensemble Smoother with Iterative Local Updating (ES-ILU) for calibration.
+
+WORKFLOW STEPS COMPLETED
+------------------------
+
+1. GIS TO INP CONVERSION
+   - Input: GIS shapefiles from /data/GIS/ (Manholes.shp, Links.shp)
+   - Method: Lossless restoration using _swmm_transfer_meta.json
+   - Output: /data/results/base_model.inp
+   - Result: Complete SWMM model with 14 nodes, 13 conduits, 8 subcatchments
+
+2. PARAMETER SELECTION (Morris Sensitivity Analysis)
+   - Method: Morris sensitivity analysis with balanced intent
+   - Trajectories: 20
+   - Evaluations: 240 model runs
+   - Top 3 influential parameters identified:
+     1. imperv (index 2, mu_star=1.147) - Percent imperviousness
+     2. zero_imperv (index 7, mu_star=0.665) - Percent zero-impervious area
+     3. slope (index 1, mu_star=0.563) - Subcatchment slope
+   - Output: /data/results/morris_sensitivity_results.txt
+
+3. MODEL CALIBRATION (ES-ILU)
+   - Method: Ensemble Smoother with Iterative Local Updating
+   - Ensemble size: 300 members
+   - Iterations: 10
+   - Calibration event: Event 1 (rainfall: event 1.txt, observations: event 1.csv)
+   - Subcatchments calibrated: ['1','2','3','4','5','6','7','8']
+   - Parameters calibrated: [2, 7, 1] (imperv, zero_imperv, slope)
+   - Performance improvement:
+     * Initial NSE: 0.194 ± 0.280
+     * Final NSE: 0.935 ± 0.0004
+     * Improvement: +0.741 NSE units
+   - Output: /data/results/calibrated_model.inp
+   - Log: /data/results/calibrated_model_progress.log
+
+4. MODEL VALIDATION
+   - Validation event: Event 2 (independent event)
+   - Validation NSE: 0.817
+   - Interpretation: Very good generalization capability
+   - Output: /data/results/validation_results.txt
+
+5. FIGURE GENERATION
+   - Time-series comparison: fig1_timeseries_calib_valid.png
+     * Shows observed vs simulated total inflow at node 18
+     * Includes both calibration (NSE=0.935) and validation (NSE=0.817) events
+   - Parameter comparison: fig2_params_group.png
+     * Shows true vs calibrated parameter values for 3 sensitive parameters
+     * Visualizes parameter adjustments across 8 subcatchments
+
+MODEL PERFORMANCE ASSESSMENT
+----------------------------
+
+CALIBRATION PERFORMANCE (Event 1):
+- Final NSE: 0.935 (Excellent: NSE > 0.9)
+- Initial to final improvement: +0.741 NSE units
+- Convergence: Rapid improvement through iterations 1-3, stabilization after iteration 6
+
+VALIDATION PERFORMANCE (Event 2 - Independent):
+- Validation NSE: 0.817 (Very Good: NSE > 0.8)
+- Generalization capability: Strong
+- Minor discrepancies in recession limb suggest potential for further refinement
+
+PARAMETER ADJUSTMENT ANALYSIS
+------------------------------
+
+Based on parameter comparison chart (fig2_params_group.png):
+
+1. IMPERVIOUSNESS (imperv):
+   - Significant increases across all subcatchments
+   - Indicates initial model underestimated runoff contributions
+   - Most sensitive parameter (mu_star=1.147)
+
+2. ZERO-IMPERVIOUSNESS (zero_imperv):
+   - Large increases in most subcatchments
+   - Suggests spatial heterogeneity in impervious surface distribution
+   - Second most sensitive parameter (mu_star=0.665)
+
+3. SLOPE:
+   - Increased values with varying degrees of adjustment
+   - Reflects topographic differences across subcatchments
+   - Third most sensitive parameter (mu_star=0.563)
+
+KEY FINDINGS
+------------
+
+1. **Parameter Sensitivity**: The Morris analysis correctly identified the most influential parameters, allowing efficient calibration of only 3 parameters instead of all 11.
+
+2. **Calibration Effectiveness**: ES-ILU successfully improved model performance from poor (NSE=0.194) to excellent (NSE=0.935) on the calibration event.
+
+3. **Model Generalization**: The calibrated model maintains very good performance (NSE=0.817) on independent validation data, demonstrating robust generalization.
+
+4. **Spatial Heterogeneity**: Parameter adjustments reflect the spatial variability of watershed characteristics across 8 subcatchments.
+
+5. **Computational Efficiency**: The workflow demonstrated efficient calibration by focusing only on the most sensitive parameters.
+
+RECOMMENDATIONS
+---------------
+
+1. **Model Application**: The calibrated model is suitable for stormwater management planning and design applications.
+
+2. **Further Refinement**: Consider calibrating additional parameters if higher precision is needed for specific applications.
+
+3. **Additional Validation**: Test the model on more diverse rainfall events to further assess generalization capability.
+
+4. **Uncertainty Analysis**: Consider performing uncertainty analysis to quantify parameter uncertainty bounds.
+
+ARTIFACTS GENERATED
+-------------------
+
+1. /data/results/base_model.inp - Original model from GIS conversion
+2. /data/results/calibrated_model.inp - Final calibrated model
+3. /data/results/morris_sensitivity_results.txt - Sensitivity analysis results
+4. /data/results/calibrated_model_progress.log - Calibration progression log
+5. /data/results/validation_results.txt - Validation performance metrics
+6. /data/results/fig1_timeseries_calib_valid.png - Time-series comparison figure
+7. /data/results/fig2_params_group.png - Parameter comparison figure
+8. /data/results/calibration_analysis_report.txt - This analysis report
+
+CONCLUSION
+----------
+The SWMM calibration workflow successfully transformed a base model derived from GIS data into a well-calibrated model with excellent performance on both calibration and validation events. The systematic approach of parameter selection followed by ensemble-based calibration proved effective, resulting in a model that accurately represents watershed hydrology while maintaining good generalization to independent events. The calibrated model is now ready for use in stormwater management applications.
+
+--- END OF REPORT ---

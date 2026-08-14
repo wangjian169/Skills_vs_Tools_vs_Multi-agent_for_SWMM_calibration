@@ -1,0 +1,92 @@
+[
+  {
+    "id": "gis_to_inp_01_lossless_restore",
+    "category": "gis_to_inp",
+    "tool_hint": "convert_gis_to_inp",
+    "description": "Run only one GIS-to-INP step and stop immediately after it finishes. Use only files under data. Convert data/GIS into a SWMM INP in lossless restore mode with preserve_all_sections=True and rebuild_core_from_gis=False. Save the direct output to data/results/gis_lossless_restore.inp. Do not run any other pipeline step before or after this call."
+  },
+  {
+    "id": "gis_to_inp_02_rebuild_core",
+    "category": "gis_to_inp",
+    "tool_hint": "convert_gis_to_inp",
+    "description": "Run only one GIS-to-INP step and stop immediately after it finishes. Rebuild the core network from data/GIS/Manholes.shp and data/GIS/Links.shp while preserving the non-core sections from metadata. Use links_path=data/GIS/Links.shp, default_roughness=0.014, preserve_all_sections=True, and rebuild_core_from_gis=True. Save the direct output to data/results/gis_rebuild_core.inp. Do not do any calibration, validation, plotting, or extra reporting."
+  },
+  {
+    "id": "gis_to_inp_03_gis_only_minimal",
+    "category": "gis_to_inp",
+    "tool_hint": "convert_gis_to_inp",
+    "description": "Run only one GIS-to-INP step and stop immediately after it finishes. Use data/GIS as input, turn off metadata preservation with preserve_all_sections=False, keep rebuild_core_from_gis=False, set default_roughness=0.015, and write the minimal INP to data/results/gis_minimal_only.inp. Do not perform any other pipeline step."
+  },
+  {
+    "id": "select_params_01_balanced_multi_event",
+    "category": "select_params",
+    "tool_hint": "select_params",
+    "description": "Run only one parameter-selection step and stop immediately after it finishes. Use data/base_model.inp as the base INP and run Morris parameter selection on two event-observation pairs: data/rainfall/event 1.txt with data/observations/event 1.csv, and data/rainfall/event 2.txt with data/observations/event 2.csv. Use subcatchments ['1','2','3','4','5','6','7','8'], intent=balanced, top_k=3, r=20, delta=0.2, and seed=7. Do not run calibration, validation, plotting, analysis, or write extra summary files."
+  },
+  {
+    "id": "select_params_02_peak_single_event",
+    "category": "select_params",
+    "tool_hint": "select_params",
+    "description": "Run only one parameter-selection step and stop immediately after it finishes. Use data/base_model.inp with the event 1 rainfall and observation files, keep subcatchments as ['1','2','3','4','5','6','7','8'], and set intent=peak, top_k=4, r=15, delta=0.25, and seed=11. Do not run any other pipeline step or write extra files."
+  },
+  {
+    "id": "select_params_03_infiltration_focus",
+    "category": "select_params",
+    "tool_hint": "select_params",
+    "description": "Run only one parameter-selection step and stop immediately after it finishes. Use data/base_model.inp with the two events in data/rainfall and data/observations. Use subcatchments ['1','2','3','4','5','6','7','8'], intent=infiltration, infiltration_model=horton, top_k=2, r=25, delta=0.1, and seed=3. Do not run calibration, validation, plotting, or extra reporting."
+  },
+  {
+    "id": "calibrate_01_indices_fast",
+    "category": "calibrate",
+    "tool_hint": "calibrate_es_ilu",
+    "description": "Run only one calibration step and stop immediately after it finishes. Use data/base_model.inp, data/rainfall/event 1.txt, and data/observations/event 1.csv. Calibrate subcatchments ['1','2','3','4','5','6','7','8'] with param_indices [1,2,8], sigma_rel=0.05, niter=1, and ne=5. Save the direct output to data/results/calibrated_idx_128.inp. Do not run selection, validation, plotting, analysis, or any follow-up step."
+  },
+  {
+    "id": "calibrate_02_named_params",
+    "category": "calibrate",
+    "tool_hint": "calibrate_es_ilu",
+    "description": "Run only one calibration step and stop immediately after it finishes. Use data/base_model.inp with data/rainfall/event 1.txt and data/observations/event 1.csv, calibrate subcatchments ['1','2','3','4','5','6','7','8'], pass ['imperv','zero_imperv','slope'] as param_indices, and use sigma_rel=0.04, niter=2, and ne=6. Save the direct output to data/results/calibrated_named_core.inp. Do not run any other pipeline step."
+  },
+  {
+    "id": "calibrate_03_all_params_smoke",
+    "category": "calibrate",
+    "tool_hint": "calibrate_es_ilu",
+    "description": "Run only one calibration step and stop immediately after it finishes. Use data/base_model.inp with data/rainfall/event 1.txt and data/observations/event 1.csv for subcatchments ['1','2','3','4','5','6','7','8'], do not pass param_indices so the default all-11-parameter path is used, and keep runtime minimal with sigma_rel=0.03, niter=1, and ne=5. Save the direct output to data/results/calibrated_all_params_smoke.inp. Do not perform any extra downstream work."
+  },
+  {
+    "id": "valid_01_both_events",
+    "category": "valid",
+    "tool_hint": "validate_model",
+    "description": "Run only one validation step and stop immediately after it finishes. Treat data/base_model.inp as the model to validate. Run validation on both event pairs: data/rainfall/event 1.txt with data/observations/event 1.csv, and data/rainfall/event 2.txt with data/observations/event 2.csv. Do not run selection, calibration, plotting, analysis, or write extra summary files."
+  },
+  {
+    "id": "valid_02_event1_only",
+    "category": "valid",
+    "tool_hint": "validate_model",
+    "description": "Run only one validation step and stop immediately after it finishes. Use data/base_model.inp with data/rainfall/event 1.txt and data/observations/event 1.csv. Do not run any other pipeline step or create extra files."
+  },
+  {
+    "id": "valid_03_event2_only",
+    "category": "valid",
+    "tool_hint": "validate_model",
+    "description": "Run only one validation step and stop immediately after it finishes. Use data/base_model.inp with data/rainfall/event 2.txt and data/observations/event 2.csv. Do not run any other pipeline step or create extra files."
+  },
+  {
+    "id": "generate_plot_01_selected_params",
+    "category": "generate_plot",
+    "tool_hint": "generate_plots",
+    "description": "Run only one plot-generation step and stop immediately after it finishes. Generate calibration and validation comparison plots from data/base_model.inp. Use calibrated_inp_list=[data/base_model.inp], node_id='18', event 1 for calibration, event 2 for validation, out_dir=data/results/plot_case_a, method_labels=['base-model'], time_tol_sec=60, and calibrated_params=['imperv','slope','zero_imperv']. Do not run any extra pipeline step."
+  },
+  {
+    "id": "generate_plot_02_autodetect_params",
+    "category": "generate_plot",
+    "tool_hint": "generate_plots",
+    "description": "Run only one plot-generation step and stop immediately after it finishes. Use data/base_model.inp with node_id='18', event 1 for the calibration plot, event 2 for the validation plot, out_dir=data/results/plot_case_b, method_labels=['baseline'], and time_tol_sec=120. Do not pass calibrated_params explicitly. Do not run any other pipeline step."
+  },
+  {
+    "id": "generate_plot_03_infiltration_params",
+    "category": "generate_plot",
+    "tool_hint": "generate_plots",
+    "description": "Run only one plot-generation step and stop immediately after it finishes. Generate plots from data/base_model.inp using node_id='18', the event 1 and event 2 files under data, out_dir=data/results/plot_case_c, method_labels=['infiltration-focus'], time_tol_sec=60, and calibrated_params=['maxrate','minrate','decay']. Do not run any extra pipeline step."
+  }
+]

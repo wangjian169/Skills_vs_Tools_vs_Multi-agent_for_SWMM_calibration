@@ -1,0 +1,111 @@
+SWMM CALIBRATION WORKFLOW ANALYSIS REPORT
+===========================================
+
+Date: Generated during calibration workflow
+Project: SWMM Model Calibration using ES-ILU
+Location: data/results/
+
+1. WORKFLOW OVERVIEW
+-------------------
+The complete SWMM calibration workflow was executed with the following steps:
+1. Base model creation from GIS data using metadata-based lossless restore
+2. Parameter selection using Morris sensitivity analysis (balanced intent, top_k=3)
+3. Model calibration using ES-ILU with event 1 data
+4. Model validation using independent event 2 data
+5. Figure generation for performance visualization
+6. VLM analysis of generated figures
+
+2. INPUT DATA
+------------
+- GIS Data: data/GIS/ (Manholes.shp, Links.shp, metadata.json)
+- Calibration Event: data/rainfall/event 1.txt, data/observations/event 1.csv
+- Validation Event: data/rainfall/event 2.txt, data/observations/event 2.csv
+- Subcatchments: ['1','2','3','4','5','6','7','8']
+- Target Node: node_18_total_inflow
+
+3. PARAMETER SELECTION RESULTS
+-----------------------------
+Method: Morris sensitivity analysis
+Intent: balanced
+Top_k: 3
+
+Selected Parameters (most influential):
+1. imperv (index 2) - mu_star=1.14672
+2. zero_imperv (index 7) - mu_star=0.665419
+3. slope (index 1) - mu_star=0.562875
+
+These 3 parameters were selected for calibration, reducing the parameter space from 11 to 3 per subcatchment.
+
+4. CALIBRATION RESULTS
+---------------------
+Method: Ensemble Smoother with Iterative Local Updating (ES-ILU)
+Configuration:
+- Ensemble size (ne): 300
+- Iterations (niter): 10
+- Best ensemble member: 119/300
+
+Calibrated Parameters: [1, 2, 7] (['slope', 'imperv', 'zero_imperv'])
+Output Model: data/results/calibrated_model.inp
+
+5. VALIDATION RESULTS
+--------------------
+Validation Event: event 2 (independent event)
+Nash-Sutcliffe Efficiency (NSE):
+- Overall NSE: 0.8168
+- node_18_total_inflow: 0.8168
+
+Interpretation: NSE > 0.75 indicates very good model performance, NSE > 0.65 indicates good performance.
+
+6. FIGURE ANALYSIS SUMMARY
+-------------------------
+Based on VLM analysis of generated figures:
+
+Time-Series Performance (fig1_timeseries_calib_valid.png):
+- Calibration Event (Event 1): NSE = 0.935 (excellent fit)
+- Validation Event (Event 2): NSE = 0.817 (good fit)
+- Model captures peak flows accurately in both events
+- Minor discrepancies in validation event rising limb
+
+Parameter Changes (fig2_params_group.png):
+- Slope: Calibrated values significantly higher than true values across all subcatchments
+- Impervious Area (imperv): Consistently increased to simulate higher runoff volumes
+- Zero Impervious Area (zero_imperv): Increased to better simulate baseflow conditions
+
+7. MODEL PERFORMANCE ASSESSMENT
+------------------------------
+Strengths:
+1. Excellent calibration performance (NSE = 0.935)
+2. Good validation performance (NSE = 0.817) indicating model robustness
+3. Effective parameter reduction from 11 to 3 using sensitivity analysis
+4. Accurate peak flow capture in both calibration and validation events
+
+Areas for Potential Improvement:
+1. Minor underestimation in validation event rising limb
+2. Parameter adjustments show systematic increases across all subcatchments
+3. Could consider additional calibration events for more robust parameter estimation
+
+8. OUTPUT ARTIFACTS
+------------------
+Generated files in data/results/:
+1. base_model.inp - Initial model from GIS conversion
+2. calibrated_model.inp - Calibrated model with optimized parameters
+3. fig1_timeseries_calib_valid.png - Time-series comparison plot
+4. fig2_params_group.png - Parameter comparison bar chart
+5. calibration_analysis_report.txt - This analysis report
+
+9. RECOMMENDATIONS
+-----------------
+1. The calibrated model is suitable for operational use with good predictive capability
+2. Consider calibrating with additional events if available for further robustness
+3. Monitor model performance during extreme events outside calibration range
+4. The parameter selection approach effectively reduced computational burden while maintaining model accuracy
+
+10. CONCLUSION
+-------------
+The SWMM calibration workflow successfully produced a well-calibrated model with:
+- High accuracy in calibration (NSE = 0.935)
+- Good generalization to independent validation event (NSE = 0.817)
+- Efficient parameter space reduction through sensitivity analysis
+- Comprehensive documentation and visualization of results
+
+The model demonstrates robust performance and is ready for application in stormwater management scenarios.

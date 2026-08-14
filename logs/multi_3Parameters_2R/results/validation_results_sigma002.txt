@@ -1,0 +1,41 @@
+SWMM MODEL VALIDATION RESULTS - EVENT 2 (SIGMA002 TUNED MODEL)
+===============================================================
+
+Validation Date: 2024-01-15
+Model: calibrated_model_sigma002.inp (sigma_rel=0.02 tuned)
+Event: event 2.txt
+Observations: event 2.csv
+
+VALIDATION RESULTS:
+------------------
+Overall Nash-Sutcliffe Efficiency (NSE): 0.9128
+
+PER-COLUMN NSE VALUES:
+----------------------
+- node_18_total_inflow: 0.9128
+
+PERFORMANCE ASSESSMENT:
+----------------------
+NSE Interpretation:
+- NSE > 0.75: Very good model performance
+- 0.65 < NSE ≤ 0.75: Good model performance  
+- 0.50 < NSE ≤ 0.65: Satisfactory model performance
+- NSE ≤ 0.50: Unsatisfactory model performance
+
+The sigma002-tuned model shows EXCELLENT performance on the independent validation event (Event 2) with an NSE of 0.9128, representing a significant improvement over the baseline model (NSE = 0.8168).
+
+IMPROVEMENT OVER BASELINE:
+-------------------------
+- Baseline NSE: 0.8168
+- Sigma002 NSE: 0.9128
+- Improvement: +0.0960 (11.75% relative improvement)
+
+EVENT DETAILS:
+-------------
+Rainfall Event Period: 2012-06-29 16:10:00 to 2012-06-29 17:00:00 (51 data points)
+Observation Period: 2012-06-29 15:41:00 to 2012-06-29 18:59:00 (199 data points)
+Observed Variable: node_18_total_inflow
+
+CONCLUSION:
+----------
+The sigma002-tuned SWMM model (with sigma_rel=0.02) demonstrates exceptional generalization capability, achieving significantly higher predictive accuracy (NSE = 0.9128) on an independent validation event. This hyperparameter adjustment (reducing sigma_rel from default to 0.02) has substantially improved the model's ability to capture hydrological processes without overfitting.

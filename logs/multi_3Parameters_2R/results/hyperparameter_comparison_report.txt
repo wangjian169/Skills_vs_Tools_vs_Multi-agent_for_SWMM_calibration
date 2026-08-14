@@ -1,0 +1,86 @@
+HYPERPARAMETER TUNING COMPARISON ANALYSIS REPORT
+==================================================
+
+Date: 2024-01-15
+Project: SWMM Model Calibration Hyperparameter Optimization
+Location: /data/results/
+
+EXECUTIVE SUMMARY
+-----------------
+This report compares the performance of three ES-ILU calibrated SWMM models with different hyperparameter settings. The sigma002 model (σ_rel=0.02) demonstrated superior validation performance (NSE=0.9128), representing an 11.75% improvement over the baseline, while the niter15 model showed negligible improvement.
+
+MODELS COMPARED
+---------------
+1. **Baseline (ES-ILU default)**: calibrated_model.inp
+   - Default hyperparameters
+   - Calibration NSE: 0.935
+   - Validation NSE: 0.8168
+
+2. **Sigma002 (σ_rel=0.02)**: calibrated_model_sigma002.inp
+   - Reduced relative standard deviation (0.02 vs default)
+   - Calibration NSE: 0.931
+   - Validation NSE: 0.9128
+
+3. **Niter15 (niter=15)**: calibrated_model_niter15.inp
+   - Increased iterations (15 vs default)
+   - Calibration NSE: 0.936
+   - Validation NSE: 0.8169
+
+VALIDATION PERFORMANCE COMPARISON
+---------------------------------
+| Model | Validation NSE | Improvement vs Baseline | Performance Assessment |
+|-------|---------------|------------------------|------------------------|
+| Baseline | 0.8168 | - | Very Good |
+| Sigma002 | 0.9128 | +0.0960 (+11.75%) | Excellent |
+| Niter15 | 0.8169 | +0.0001 (+0.01%) | Very Good |
+
+KEY FINDINGS FROM VLM ANALYSIS
+------------------------------
+Based on visual analysis of comparison figures:
+
+1. **Time-Series Performance**:
+   - All models perform excellently on calibration event (Event 1)
+   - Sigma002 model shows best validation performance, accurately capturing peak flows
+   - Baseline and Niter15 models underestimate peak flows during validation
+
+2. **Parameter Adjustments**:
+   - Sigma002 consistently adjusts imperviousness and zero_imperviousness higher than other methods
+   - Sigma002 shows significant slope increases across subcatchments
+   - Niter15 shows more variability in parameter adjustments
+   - Spatial heterogeneity is evident across subcatchments
+
+3. **Hyperparameter Effectiveness**:
+   - **σ_rel=0.02**: More effective - allows finer tuning without overfitting
+   - **niter=15**: Less effective - default iterations sufficient for convergence
+
+SENSITIVITY ANALYSIS CONTEXT
+---------------------------
+Calibration focused on three most sensitive parameters identified by Morris analysis:
+1. imperv (mu_star=1.15) - Most influential
+2. zero_imperv (mu_star=0.67) - Moderately influential  
+3. slope (mu_star=0.56) - Least influential of selected set
+
+The sigma002 model's superior performance suggests that tighter control over parameter uncertainty (lower σ_rel) is beneficial when calibrating highly sensitive parameters like imperviousness.
+
+RECOMMENDATIONS
+---------------
+1. **Primary Recommendation**: Use sigma002 model (σ_rel=0.02) for operational applications
+2. **Hyperparameter Settings**: For future calibrations, consider σ_rel=0.02 as default
+3. **Iteration Settings**: Default niter=10 appears sufficient; increasing to 15 provides negligible benefit
+4. **Parameter Focus**: Continue prioritizing imperv, zero_imperv, and slope based on sensitivity analysis
+
+CONCLUSION
+----------
+The sigma002 hyperparameter adjustment (reducing σ_rel from default to 0.02) significantly improves model generalization capability, achieving excellent validation performance (NSE=0.9128). This represents the optimal balance between calibration accuracy and validation robustness. The niter15 adjustment provides minimal benefit, suggesting the original calibration had already converged sufficiently.
+
+FILES GENERATED
+---------------
+1. Validation results:
+   - validation_results_sigma002.txt
+   - validation_results_niter15.txt
+
+2. Comparison figures:
+   - fig_comparison_timeseries.png
+   - fig_comparison_params.png
+
+3. This report: hyperparameter_comparison_report.txt

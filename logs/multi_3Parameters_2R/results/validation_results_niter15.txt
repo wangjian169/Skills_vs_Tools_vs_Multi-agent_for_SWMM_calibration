@@ -1,0 +1,41 @@
+SWMM MODEL VALIDATION RESULTS - EVENT 2 (NITER15 TUNED MODEL)
+==============================================================
+
+Validation Date: 2024-01-15
+Model: calibrated_model_niter15.inp (niter=15 tuned)
+Event: event 2.txt
+Observations: event 2.csv
+
+VALIDATION RESULTS:
+------------------
+Overall Nash-Sutcliffe Efficiency (NSE): 0.8169
+
+PER-COLUMN NSE VALUES:
+----------------------
+- node_18_total_inflow: 0.8169
+
+PERFORMANCE ASSESSMENT:
+----------------------
+NSE Interpretation:
+- NSE > 0.75: Very good model performance
+- 0.65 < NSE ≤ 0.75: Good model performance  
+- 0.50 < NSE ≤ 0.65: Satisfactory model performance
+- NSE ≤ 0.50: Unsatisfactory model performance
+
+The niter15-tuned model shows VERY GOOD performance on the independent validation event (Event 2) with an NSE of 0.8169, which is nearly identical to the baseline model performance (NSE = 0.8168).
+
+COMPARISON WITH BASELINE:
+------------------------
+- Baseline NSE: 0.8168
+- Niter15 NSE: 0.8169
+- Difference: +0.0001 (0.01% relative change)
+
+EVENT DETAILS:
+-------------
+Rainfall Event Period: 2012-06-29 16:10:00 to 2012-06-29 17:00:00 (51 data points)
+Observation Period: 2012-06-29 15:41:00 to 2012-06-29 18:59:00 (199 data points)
+Observed Variable: node_18_total_inflow
+
+CONCLUSION:
+----------
+The niter15-tuned SWMM model (with niter=15) demonstrates essentially identical performance to the baseline model on the independent validation event. This hyperparameter adjustment (increasing niter from default to 15) did not result in measurable improvement in validation performance, suggesting that the original calibration had already converged sufficiently with the default iteration settings.

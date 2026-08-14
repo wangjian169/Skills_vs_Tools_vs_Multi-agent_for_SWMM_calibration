@@ -1,0 +1,60 @@
+MORRIS SENSITIVITY ANALYSIS RESULTS
+====================================
+
+Analysis Date: Parameter selection for SWMM calibration
+Intent: balanced
+Infiltration model: horton
+
+INPUT FILES:
+------------
+Base INP file: /data/results/base_model.inp
+Rainfall file: /data/rainfall/event 1.txt
+Observation file: /data/observations/event 1.csv
+Subcatchments: ['1','2','3','4','5','6','7','8']
+
+ANALYSIS SETTINGS:
+------------------
+Method: morris
+Number of trajectories (r): 20
+Perturbation step (delta): 0.2
+Random seed: 7
+Top k parameters to select: 3
+
+RESULTS:
+--------
+Selected parameter indices: [2, 7, 1]
+Selected parameter names: ['imperv', 'zero_imperv', 'slope']
+
+CLI format for calibration: --param_indices 2 7 1
+
+PARAMETER RANKING (by mu_star sensitivity):
+-------------------------------------------
+Rank 1:  idx=2   name=imperv        mu_star=1.14672   sigma=1.49725
+Rank 2:  idx=7   name=zero_imperv   mu_star=0.665419  sigma=0.713057
+Rank 3:  idx=1   name=slope         mu_star=0.562875  sigma=0.682048
+Rank 4:  idx=3   name=n_imperv      mu_star=0.391995  sigma=0.260777
+Rank 5:  idx=5   name=dstor_imperv  mu_star=0.338695  sigma=0.495905
+Rank 6:  idx=0   name=width         mu_star=0.328483  sigma=0.186252
+Rank 7:  idx=4   name=n_perv        mu_star=0         sigma=0
+Rank 8:  idx=6   name=dstor_perv    mu_star=0         sigma=0
+Rank 9:  idx=8   name=maxrate       mu_star=0         sigma=0
+Rank 10: idx=9   name=minrate       mu_star=0         sigma=0
+Rank 11: idx=10  name=decay         mu_star=0         sigma=0
+
+DIAGNOSTICS:
+------------
+Number of events: 1
+Number of model evaluations: 240
+Runtime: 5.349 seconds
+
+INTERPRETATION:
+---------------
+The Morris sensitivity analysis identified the top 3 most influential parameters for calibration:
+
+1. **imperv (index 2)**: Percent imperviousness - Highest sensitivity (mu_star=1.147)
+2. **zero_imperv (index 7)**: Percent of impervious area with no depression storage - Second highest sensitivity (mu_star=0.665)
+3. **slope (index 1)**: Subcatchment slope - Third highest sensitivity (mu_star=0.563)
+
+These parameters should be prioritized for calibration as they have the greatest influence on model performance according to the Morris sensitivity analysis with balanced intent.
+
+Note: Parameters with mu_star=0 showed no sensitivity in this analysis, meaning they have minimal impact on the objective function (1 - NSE) for this particular event and model setup.

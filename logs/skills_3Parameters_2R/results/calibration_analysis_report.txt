@@ -1,0 +1,113 @@
+SWMM CALIBRATION WORKFLOW ANALYSIS REPORT
+==========================================
+
+1. WORKFLOW OVERVIEW
+-------------------
+- Base model created from GIS data using lossless metadata restore
+- Parameter selection via Morris sensitivity analysis (intent=balanced, top_k=3)
+- Model calibration using ES-ILU on event 1 data
+- Model validation on independent event 2 data
+- Figure generation and VLM analysis
+
+2. MODEL CONSTRUCTION
+---------------------
+- Source: GIS shapefiles (Manholes.shp + Links.shp) with metadata
+- Mode: Lossless restore using _swmm_transfer_meta.json
+- Network statistics: 14 nodes (13 junctions, 1 outfall), 13 links
+- Output: base_model.inp
+
+3. PARAMETER SELECTION RESULTS
+-----------------------------
+Method: Morris sensitivity analysis
+Intent: balanced (considering all 11 parameters)
+Top-k selection: 3 parameters
+
+Selected parameters (most influential):
+1. imperv (index 2, mu*=1.14672) - Imperviousness percentage
+2. zero_imperv (index 7, mu*=0.665419) - Zero-impervious percentage
+3. slope (index 1, mu*=0.562875) - Subcatchment slope
+
+Parameter ranking (mu* values):
+1. imperv: 1.14672
+2. zero_imperv: 0.665419
+3. slope: 0.562875
+4. n_imperv: 0.391995
+5. dstor_imperv: 0.338695
+6. width: 0.328483
+7-11. Other parameters: mu*=0 (negligible influence)
+
+4. CALIBRATION RESULTS
+----------------------
+Method: Ensemble Smoother with Iterative Local Updating (ES-ILU)
+Configuration: NE=300 ensemble members, 10 iterations
+Calibration event: event 1.txt / event 1.csv
+Subcatchments calibrated: ['1','2','3','4','5','6','7','8']
+Parameters calibrated: slope, imperv, zero_imperv
+
+Calibration performance:
+- NSE (event 1): 0.9353 (excellent)
+- Best ensemble member: 119/300
+
+Output: calibrated_model.inp
+
+5. VALIDATION RESULTS
+---------------------
+Validation event: event 2.txt / event 2.csv (independent event)
+Validation performance:
+- NSE (event 2): 0.8168 (very good)
+
+Interpretation:
+- NSE > 0.75: Excellent model performance
+- NSE > 0.65: Very good model performance
+- The model shows good generalization to unseen data
+
+6. FIGURE ANALYSIS SUMMARY
+--------------------------
+Based on VLM analysis of generated figures:
+
+6.1 Fit Quality:
+- Calibration (event 1): High fit quality (NSE=0.935), model closely follows observed data, accurately captures peak and recession
+- Validation (event 2): Good fit (NSE=0.817), model tracks observed data well with slight deviations
+
+6.2 Subcatchment-Level Insights:
+- Slope parameter: Significant spatial heterogeneity
+  - Subcatchment 2: Highest slope (steeper terrain)
+  - Subcatchments 3, 6, 8: Much lower slopes (flatter terrain)
+- Imperviousness: Relatively uniform (~50%) except subcatchment 6 (lower)
+- Zero imperviousness: Uniform (~25%) except subcatchment 6 (lower)
+- Subcatchment 6 shows distinct characteristics suggesting different land use
+
+6.3 Overall Assessment:
+- Successful calibration with high NSE (0.935)
+- Good generalization capability (validation NSE=0.817)
+- Model captures spatial heterogeneity in key parameters
+- Sensitive to slope and imperviousness variations
+
+7. ARTIFACTS GENERATED
+----------------------
+1. base_model.inp - Base SWMM model from GIS
+2. calibrated_model.inp - Calibrated SWMM model
+3. fig1_timeseries_calib_valid.png - Time-series comparison
+4. fig2_params_group.png - Parameter comparison chart
+5. calibration_analysis_report.txt - This report
+
+8. KEY FINDINGS
+---------------
+1. The three most influential parameters identified: imperv, zero_imperv, slope
+2. ES-ILU calibration achieved excellent performance (NSE=0.935)
+3. Model validates well on independent event (NSE=0.817)
+4. Significant spatial heterogeneity in slope across subcatchments
+5. Subcatchment 6 shows distinct land use characteristics
+6. Model demonstrates good generalization capability
+
+9. RECOMMENDATIONS
+------------------
+1. The calibrated model is suitable for hydrological simulations in this catchment
+2. Future calibrations could include additional events for robustness
+3. Consider investigating subcatchment 6's unique characteristics
+4. The parameter selection approach effectively reduced calibration dimensionality
+5. ES-ILU proved effective for SWMM parameter calibration
+
+==========================================
+Report generated: Complete SWMM calibration workflow
+All artifacts saved in: data/results/
