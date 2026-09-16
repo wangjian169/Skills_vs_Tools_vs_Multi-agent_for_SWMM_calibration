@@ -85,3 +85,25 @@ The included example data cover one SWMM model, GIS network files, two rainfall 
 ## Notes
 
 ES-ILU calibration can be computationally expensive. The default full configuration uses `ne=300` ensemble members and `niter=10` iterations. Several tasks in `tasks.json` use smaller values for smoke tests and architecture comparisons.
+
+## 📖 Citation
+
+If you use this project in your research, please cite:
+
+Wang, J., Liu, S., Fu, G., *et al.* (2026). *Towards autonomous urban drainage modelling: evaluating AI agent architectures for automated SWMM calibration.* **npj Clean Water**. https://doi.org/10.1038/s41545-026-00638-8
+
+<details>
+<summary><strong>BibTeX</strong></summary>
+
+```bibtex
+@article{wang2026autonomous,
+  title   = {Towards autonomous urban drainage modelling: evaluating AI agent architectures for automated {SWMM} calibration},
+  author  = {Wang, J. and Liu, S. and Fu, G. and others},
+  journal = {npj Clean Water},
+  year    = {2026},
+  doi     = {10.1038/s41545-026-00638-8},
+  url     = {https://doi.org/10.1038/s41545-026-00638-8}
+}
+```
+
+</details>
